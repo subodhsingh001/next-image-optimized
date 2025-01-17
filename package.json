@@ -25,7 +25,37 @@
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
+  "author": "Subodh Singh",
   "license": "MIT",
+  "keywords": [
+  "nextjs",
+  "react",
+  "image",
+  "image optimization",
+  "nextjs image",
+  "responsive images",
+  "image resizing",
+  "aspect ratio",
+  "device sizing",
+  "custom breakpoints",
+  "dynamic images",
+  "image lazy loading",
+  "image quality",
+  "webp format",
+  "image optimization API",
+  "frontend",
+  "web performance",
+  "developer tools",
+  "UI components",
+  "image responsive",
+  "image CDN",
+  "image loader",
+  "image compression",
+  "image styles",
+  "nextjs component",
+  "react component",
+  "optimized image"
+],
   "dependencies": {
     "next": "^15.1.4"
   }
