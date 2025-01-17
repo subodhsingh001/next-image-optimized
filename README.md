@@ -27,19 +27,6 @@ yarn add next-image-optimized
 
 
 
-## 🚀 Enhancements Over Next.js Image
-
-- 1. Automatic Device-Based Sizing
-- Automatically adjusts image dimensions for desktop, tablet, and mobile using custom breakpoints.
-- Eliminates the need for manually defining the sizes attribute for responsive designs.
-
-  <NextImageOptimized
-    src="/example.jpg"
-    alt="Responsive Image"
-    deviceSizes={{ desktop: 1920, tablet: 1024, mobile: 768 }}
-  />
-
-
 ## 🔥 Quick Start
 - Here's how to get started with NextImageOptimized:
 
@@ -51,10 +38,10 @@ const App = () => (
     <h1>NextImageOptimized Demo</h1>
     <NextImageOptimized
       src="/example.jpg"
-      alt="Example Image"
-      aspectRatio={16 / 9}
+      alt="Optimized Image"
       quality={80}
-      width="100%" // Responsive width
+      aspectRatio={16 / 9} // Maintain a 16:9 aspect ratio
+      width="100%" // Responsive full width
     />
   </div>
 );
@@ -68,6 +55,8 @@ export default App;
 ##  🎨 Customization Examples
 
 1. Default Responsive Image
+   Automatically adjusts the width based on the device size:
+
   <NextImageOptimized
     src="/example.jpg"
     alt="Responsive Image"
@@ -100,4 +89,40 @@ Maintain a consistent aspect ratio:
     style={{ border: "2px solid #ccc", borderRadius: "8px" }}
   />
 
-```
+5. Custom Styling
+
+<NextImageOptimized
+  src="/example.jpg"
+  alt="Styled Image"
+  className="custom-class"
+  style={{ border: "2px solid #ccc", borderRadius: "8px" }}
+/>
+
+6. Dynamic Optimization with External URLs
+Optimize external images by dynamically appending query parameters:
+
+<NextImageOptimized
+  src="https://example.com/image.jpg"
+  alt="External Image"
+  quality={75}
+  width={1200}
+  height={800}
+/>
+
+Default Behavior
+If you don’t provide a deviceSizes prop, the component will use the default sizes:
+
+const defaultDeviceSizes = { desktop: 1920, tablet: 1024, mobile: 768 };
+
+<NextImageOptimized
+  src="/example.jpg"
+  alt="Default Device Sizes"
+/>
+
+Prioritize Mobile-First Design
+
+<NextImageOptimized
+  src="/example.jpg"
+  alt="Mobile-First Design"
+  deviceSizes={{ desktop: 1440, tablet: 1024, mobile: 640 }}
+/>
