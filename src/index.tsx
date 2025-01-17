@@ -28,9 +28,7 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
   let width = props?.width || deviceSizes[deviceSize];
   let height =
     props?.height ||
-    (validAspectRatio && typeof width === "number"
-      ? Math.round((width as number) / validAspectRatio)
-      : undefined);
+    (validAspectRatio && typeof width === "number" ? Math.round((width as number) / validAspectRatio) : undefined);
 
   // Check for percentage-based dimensions
   const isPercentageWidth = typeof width === "string" && width.includes("%");
@@ -60,10 +58,8 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
   }
 
   // Final width/height validation (sanitize)
-  const sanitizedWidth =
-    typeof width === "number" && !isNaN(width) ? width : undefined;
-  const sanitizedHeight =
-    typeof height === "number" && !isNaN(height) ? height : undefined;
+  const sanitizedWidth = typeof width === "number" && !isNaN(width) ? width : undefined;
+  const sanitizedHeight = typeof height === "number" && !isNaN(height) ? height : undefined;
 
   // Remove width/height from props if layout is "fill"
   const { width: propWidth, height: propHeight, ...cleanedProps } = props;
@@ -72,7 +68,6 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
     <div
       className={className}
       style={{
-        position: "relative",
         width: isPercentageWidth ? width : `${sanitizedWidth}px`,
         height: isPercentageHeight
           ? height
@@ -81,14 +76,14 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
           : sanitizedHeight
           ? `${sanitizedHeight}px`
           : "auto",
-        ...style,
+        ...style, // User-defined styles override
       }}
     >
       <Image
         {...cleanedProps} // Spread cleaned props without width/height
         src={optimizedSrc}
         layout={layout}
-        objectFit="cover"
+        objectFit='cover'
         quality={quality}
         {...(layout !== "fill" && {
           width: sanitizedWidth,
