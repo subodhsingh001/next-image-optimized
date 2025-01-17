@@ -3,15 +3,24 @@ import { getDeviceSize } from './breakpoints'; // Reuse the device size utility
 export const optimizeImage = (
   src: string,
   quality: number,
-  aspectRatio: number = 16 / 9
+  width?: number | string, // Optional width
+  height?: number | string, // Optional height
+  aspectRatio?: number // Optional aspect ratio
 ): string => {
   const deviceSize = getDeviceSize();
-  const sizes = { desktop: 1920, tablet: 1024, mobile: 768 };
-  const width = sizes[deviceSize];
-  const height = width / aspectRatio;
+  const defaultSizes = { desktop: 1920, tablet: 1024, mobile: 768 };
+  const defaultWidth = defaultSizes[deviceSize];
 
-  if (src.startsWith("http")) {
-    return `${src}?w=${width}&h=${height}&q=${quality}&format=webp`;
-  }
-  return src;
+  // Use provided width/height or calculate height from aspect ratio
+  const finalWidth = width ?? defaultWidth;
+  const finalHeight =
+    height ??
+    (aspectRatio ? Math.round((Number(finalWidth) as number) / aspectRatio) : undefined);
+
+  // Build query parameters for the image URL
+  let query = `?q=${quality}&format=webp`;
+  if (finalWidth && typeof finalWidth === 'number') query += `&w=${finalWidth}`;
+  if (finalHeight && typeof finalHeight === 'number') query += `&h=${finalHeight}`;
+
+  return src.startsWith("http") ? `${src}${query}` : src;
 };
