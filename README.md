@@ -35,14 +35,15 @@ import NextImageOptimized from "next-image-optimized";
 
 const App = () => (
   <div>
-    <h1>NextImageOptimized Demo</h1>
-    <NextImageOptimized
-      src="/example.jpg"
-      alt="Optimized Image"
-      quality={80}
-      aspectRatio={16 / 9} // Maintain a 16:9 aspect ratio
-      width="100%" // Responsive full width
-    />
+  <h1>NextImageOptimized Demo</h1>
+
+   <NextImageOptimized
+    src="/example.jpg"
+    alt="Full Width Image"
+    width="100%"
+    aspectRatio={16 / 9}
+  />
+  
   </div>
 );
 

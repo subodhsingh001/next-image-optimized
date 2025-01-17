@@ -28,21 +28,30 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
   let width = props?.width || deviceSizes[deviceSize];
   let height =
     props?.height ||
-    (validAspectRatio && typeof width === "number" ? Math.round((width as number) / validAspectRatio) : undefined);
+    (validAspectRatio && typeof width === "number"
+      ? Math.round((width as number) / validAspectRatio)
+      : undefined);
+
+  // Handle missing dimensions
+  if (!width || !height) {
+    width = 800; // Default fallback width
+    height = 450; // Default fallback height
+  }
 
   // Check for percentage-based dimensions
   const isPercentageWidth = typeof width === "string" && width.includes("%");
   const isPercentageHeight = typeof height === "string" && height.includes("%");
 
-  // Determine layout based on dimensions
-  const layout = isPercentageWidth || isPercentageHeight ? "fill" : "intrinsic";
+  // Determine if fill or responsive should be used
+  const isFill = isPercentageWidth || isPercentageHeight;
+  const layout = isFill ? "fill" : "responsive";
 
   // Optimize image source
   const optimizedSrc = optimizeImage(
     props?.src as string,
     quality,
-    layout === "intrinsic" ? width : undefined,
-    layout === "intrinsic" ? height : undefined,
+    !isFill && typeof width === "number" ? width : undefined,
+    !isFill && typeof height === "number" ? height : undefined,
     validAspectRatio
   );
 
@@ -53,41 +62,35 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
       width,
       height,
       validAspectRatio,
+      isFill,
       layout,
     });
   }
 
-  // Final width/height validation (sanitize)
-  const sanitizedWidth = typeof width === "number" && !isNaN(width) ? width : undefined;
-  const sanitizedHeight = typeof height === "number" && !isNaN(height) ? height : undefined;
-
-  // Remove width/height from props if layout is "fill"
+  // Remove width/height from props if fill is true
   const { width: propWidth, height: propHeight, ...cleanedProps } = props;
 
   return (
     <div
       className={className}
       style={{
-        width: isPercentageWidth ? width : `${sanitizedWidth}px`,
-        height: isPercentageHeight
-          ? height
-          : validAspectRatio && sanitizedWidth
-          ? `${(sanitizedWidth / validAspectRatio).toFixed(2)}px`
-          : sanitizedHeight
-          ? `${sanitizedHeight}px`
-          : "auto",
-        ...style, // User-defined styles override
+        ...(isPercentageWidth ? { width } : {}),
+        ...(isPercentageHeight ? { height } : {}),
+        ...(validAspectRatio && typeof width === "number"
+          ? { height: `${(width / validAspectRatio).toFixed(2)}px` }
+          : {}),
+        ...style, // Allow user-defined styles to override defaults
       }}
     >
       <Image
         {...cleanedProps} // Spread cleaned props without width/height
         src={optimizedSrc}
         layout={layout}
-        objectFit='cover'
+        objectFit="cover"
         quality={quality}
-        {...(layout !== "fill" && {
-          width: sanitizedWidth,
-          height: sanitizedHeight,
+        {...(!isFill && {
+          width: typeof width === "number" ? width : undefined,
+          height: typeof height === "number" ? height : undefined,
         })}
       />
     </div>
