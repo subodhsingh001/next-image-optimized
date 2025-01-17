@@ -28,7 +28,9 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
   let width = props?.width || deviceSizes[deviceSize];
   let height =
     props?.height ||
-    (validAspectRatio ? (Number(width) as number) / validAspectRatio : undefined);
+    (validAspectRatio && typeof width === "number"
+      ? Math.round((width as number) / validAspectRatio)
+      : undefined);
 
   // Check for percentage-based dimensions
   const isPercentageWidth = typeof width === "string" && width.includes("%");
@@ -57,20 +59,26 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
     });
   }
 
+  // Ensure width and height are valid numbers or undefined
+  const sanitizedWidth =
+    typeof width === "number" && !isNaN(width) ? width : undefined;
+  const sanitizedHeight =
+    typeof height === "number" && !isNaN(height) ? height : undefined;
+
   // Only pass width and height for "intrinsic" or "fixed" layouts
-  const imageProps = layout === "fill" ? {} : { width, height };
+  const imageProps = layout === "fill" ? {} : { width: sanitizedWidth, height: sanitizedHeight };
 
   return (
     <div
       className={className}
       style={{
         position: "relative",
-        width: isPercentageWidth ? width : `${width}px`,
+        width: isPercentageWidth ? width : `${sanitizedWidth}px`,
         height: isPercentageHeight
           ? height
-          : validAspectRatio
-          ? `${(Number(width) / validAspectRatio).toFixed(2)}px`
-          : `${height}px`,
+          : validAspectRatio && sanitizedWidth
+          ? `${(sanitizedWidth / validAspectRatio).toFixed(2)}px`
+          : `${sanitizedHeight}px`,
         ...style,
       }}
     >
