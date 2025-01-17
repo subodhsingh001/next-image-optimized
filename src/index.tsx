@@ -65,6 +65,9 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
   const sanitizedHeight =
     typeof height === "number" && !isNaN(height) ? height : undefined;
 
+  // Remove width/height from props if layout is "fill"
+  const { width: propWidth, height: propHeight, ...cleanedProps } = props;
+
   return (
     <div
       className={className}
@@ -82,7 +85,7 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
       }}
     >
       <Image
-        {...props}
+        {...cleanedProps} // Spread cleaned props without width/height
         src={optimizedSrc}
         layout={layout}
         objectFit="cover"
