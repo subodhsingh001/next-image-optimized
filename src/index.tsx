@@ -28,15 +28,14 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
   let width = props?.width || deviceSizes[deviceSize];
   let height =
     props?.height ||
-    (validAspectRatio ? (width as number) / validAspectRatio : undefined);
+    (validAspectRatio ? (Number(width) as number) / validAspectRatio : undefined);
 
   // Check for percentage-based dimensions
   const isPercentageWidth = typeof width === "string" && width.includes("%");
   const isPercentageHeight = typeof height === "string" && height.includes("%");
 
-  // Adjust layout based on dimension type
-  const layout =
-    isPercentageWidth || isPercentageHeight ? "fill" : "intrinsic";
+  // Determine layout based on dimensions
+  const layout = isPercentageWidth || isPercentageHeight ? "fill" : "intrinsic";
 
   // Handle local or remote image optimization
   const optimizedSrc = optimizeImage(
@@ -58,6 +57,9 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
     });
   }
 
+  // Only pass width and height for "intrinsic" or "fixed" layouts
+  const imageProps = layout === "fill" ? {} : { width, height };
+
   return (
     <div
       className={className}
@@ -74,15 +76,11 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
     >
       <Image
         {...props}
+        {...imageProps}
         src={optimizedSrc}
         layout={layout}
         objectFit="cover"
         quality={quality}
-        sizes={
-          layout === "fill"
-            ? undefined
-            : `${deviceSizes.mobile}px, ${deviceSizes.tablet}px, ${deviceSizes.desktop}px`
-        }
       />
     </div>
   );
