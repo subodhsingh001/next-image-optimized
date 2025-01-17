@@ -1,25 +1,27 @@
-
 {
-    "compilerOptions": {
-      "target": "ES6",
-      "module": "ESNext",
-      "moduleResolution": "Node",
-      "lib": ["DOM", "DOM.Iterable", "ESNext"],
-      "allowJs": true,
-      "skipLibCheck": true,
-      "strict": true,
-      "forceConsistentCasingInFileNames": true,
-      "esModuleInterop": true,
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "jsx": "preserve",
-      "incremental": true,
-      "baseUrl": ".",
-      "paths": {
-        "next/image": ["./node_modules/next/dist/client/image.d.ts"]
-      }
-    },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-    "exclude": ["node_modules"]
-  }
-  
+  "compilerOptions": {
+    "target": "ES6", // Target ES6+ JavaScript
+    "module": "ESNext", // Use ESNext module system
+    "moduleResolution": "Node", // Resolve modules like Node.js
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], // Add DOM and modern JS libraries
+    "allowJs": true, // Allow JavaScript files
+    "skipLibCheck": true, // Skip type checks on declaration files
+    "strict": true, // Enable all strict type checks
+    "forceConsistentCasingInFileNames": true, // Ensure consistent file name casing
+    "esModuleInterop": true, // Enable ES module interop
+    "resolveJsonModule": true, // Allow importing `.json` files
+    "isolatedModules": true, // Required for Next.js
+    "jsx": "react", // Use React JSX
+    "incremental": true, // Speed up subsequent builds
+    "declaration": true, // Generate `.d.ts` type declaration files
+    "declarationDir": "dist", // Output `.d.ts` files in the `dist` directory
+    "emitDeclarationOnly": true, // Emit only `.d.ts` files, no JS
+    "outDir": "dist", // Output compiled files in the `dist` directory
+    "baseUrl": ".", // Base directory for imports
+    "paths": {
+      "next/image": ["./node_modules/next/dist/client/image.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"], // Include source files
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"] // Exclude tests and built files
+}
