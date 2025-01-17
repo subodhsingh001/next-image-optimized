@@ -23,3 +23,25 @@ npm install next-image-optimized
 
 # Using yarn
 yarn add next-image-optimized
+
+
+## 🔥 Quick Start
+- Here's how to get started with NextImageOptimized:
+
+import React from "react";
+import NextImageOptimized from "next-image-optimized";
+
+const App = () => (
+  <div>
+    <h1>NextImageOptimized Demo</h1>
+    <NextImageOptimized
+      src="/example.jpg"
+      alt="Example Image"
+      aspectRatio={16 / 9}
+      quality={80}
+    />
+  </div>
+);
+
+export default App;
+
