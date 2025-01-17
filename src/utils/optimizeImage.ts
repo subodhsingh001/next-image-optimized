@@ -12,15 +12,22 @@ export const optimizeImage = (
   const defaultWidth = defaultSizes[deviceSize];
 
   // Use provided width/height or calculate height from aspect ratio
-  const finalWidth = width ?? defaultWidth;
+  const finalWidth =
+    typeof width === "number" && !isNaN(width) ? width : defaultWidth;
+
   const finalHeight =
-    height ??
-    (aspectRatio ? Math.round((Number(finalWidth) as number) / aspectRatio) : undefined);
+    typeof height === "number" && !isNaN(height)
+      ? height
+      : aspectRatio && typeof finalWidth === "number"
+      ? Math.round(finalWidth / aspectRatio)
+      : undefined;
 
   // Build query parameters for the image URL
   let query = `?q=${quality}&format=webp`;
-  if (typeof finalWidth === "number") query += `&w=${finalWidth}`;
-  if (typeof finalHeight === "number") query += `&h=${finalHeight}`;
+
+  // Only add width/height if they are valid numbers
+  if (typeof finalWidth === "number" && !isNaN(finalWidth)) query += `&w=${finalWidth}`;
+  if (typeof finalHeight === "number" && !isNaN(finalHeight)) query += `&h=${finalHeight}`;
 
   // If the image is local, return the source directly
   if (!src.startsWith("http")) {

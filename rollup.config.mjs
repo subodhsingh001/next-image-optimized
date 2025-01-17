@@ -40,5 +40,10 @@ export default {
     }),
     terser(), // Minifies the JavaScript
   ],
-  external: ['react', 'react-dom', 'next'], // Mark peer dependencies as external
+  external: [
+    'react', // Peer dependency
+    'react-dom', // Peer dependency
+    'next', // Peer dependency
+    'react/jsx-runtime', // Explicitly mark `react/jsx-runtime` as external
+  ],
 };

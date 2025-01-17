@@ -1,7 +1,7 @@
 import Image, { ImageProps } from "next/image";
 import { getDeviceSize } from "./utils/breakpoints";
 import { optimizeImage } from "./utils/optimizeImage";
-import * as React from "react";
+import React from "react";
 
 interface NextImageOptimizedProps extends ImageProps {
   quality?: number; // Quality of the image (1-100)
@@ -39,12 +39,12 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
   // Determine layout based on dimensions
   const layout = isPercentageWidth || isPercentageHeight ? "fill" : "intrinsic";
 
-  // Handle local or remote image optimization
+  // Optimize image source
   const optimizedSrc = optimizeImage(
     props?.src as string,
     quality,
-    !isPercentageWidth ? width : undefined,
-    !isPercentageHeight ? height : undefined,
+    layout === "intrinsic" ? width : undefined,
+    layout === "intrinsic" ? height : undefined,
     validAspectRatio
   );
 
@@ -59,14 +59,11 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
     });
   }
 
-  // Ensure width and height are valid numbers or undefined
+  // Final width/height validation (sanitize)
   const sanitizedWidth =
     typeof width === "number" && !isNaN(width) ? width : undefined;
   const sanitizedHeight =
     typeof height === "number" && !isNaN(height) ? height : undefined;
-
-  // Only pass width and height for "intrinsic" or "fixed" layouts
-  const imageProps = layout === "fill" ? {} : { width: sanitizedWidth, height: sanitizedHeight };
 
   return (
     <div
@@ -78,17 +75,22 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
           ? height
           : validAspectRatio && sanitizedWidth
           ? `${(sanitizedWidth / validAspectRatio).toFixed(2)}px`
-          : `${sanitizedHeight}px`,
+          : sanitizedHeight
+          ? `${sanitizedHeight}px`
+          : "auto",
         ...style,
       }}
     >
       <Image
         {...props}
-        {...imageProps}
         src={optimizedSrc}
         layout={layout}
         objectFit="cover"
         quality={quality}
+        {...(layout !== "fill" && {
+          width: sanitizedWidth,
+          height: sanitizedHeight,
+        })}
       />
     </div>
   );
