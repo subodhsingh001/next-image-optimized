@@ -11,18 +11,21 @@ export default {
     {
       file: 'dist/index.js',
       format: 'cjs', // CommonJS format
-      sourcemap: true,
+      sourcemap: true, // Include sourcemaps
     },
     {
       file: 'dist/index.esm.js',
       format: 'esm', // ES Module format
-      sourcemap: true,
+      sourcemap: true, // Include sourcemaps
     },
   ],
   plugins: [
     resolve(), // Resolves dependencies in node_modules
     commonjs(), // Converts CommonJS modules to ES modules
-    typescript({ tsconfig: './tsconfig.json' }), // Handles TypeScript
+    typescript({
+      tsconfig: './tsconfig.json',
+      useTsconfigDeclarationDir: true, // Output type declarations
+    }),
     babel({
       presets: [
         '@babel/preset-react', // Transpile JSX
@@ -37,5 +40,5 @@ export default {
     }),
     terser(), // Minifies the JavaScript
   ],
-  external: ['react', 'react-dom'], // Mark peer dependencies as external
+  external: ['react', 'react-dom', 'next'], // Mark peer dependencies as external
 };

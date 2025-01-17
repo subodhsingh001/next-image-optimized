@@ -22,5 +22,10 @@ export const optimizeImage = (
   if (typeof finalWidth === "number") query += `&w=${finalWidth}`;
   if (typeof finalHeight === "number") query += `&h=${finalHeight}`;
 
-  return src.startsWith("http") ? `${src}${query}` : src;
+  // If the image is local, return the source directly
+  if (!src.startsWith("http")) {
+    return src;
+  }
+
+  return `${src}${query}`;
 };
