@@ -45,3 +45,32 @@ const App = () => (
 
 export default App;
 
+
+##  🎨 Customization Examples
+1. Using Aspect Ratio
+Maintain a consistent aspect ratio:
+
+<NextImageOptimized
+  src="/example.jpg"
+  alt="Example Image"
+  aspectRatio={4 / 3}
+/>
+
+2. Custom Device Sizes
+Define custom breakpoints for desktop, tablet, and mobile:
+
+<NextImageOptimized
+  src="/example.jpg"
+  alt="Example Image"
+  deviceSizes={{ desktop: 1600, tablet: 768, mobile: 480 }}
+/>
+3. Dynamic Width and Height
+Directly set width and height for precise control:
+
+<NextImageOptimized
+  src="/example.jpg"
+  alt="Example Image"
+  width={800}
+  height={600}
+/>
+
