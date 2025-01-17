@@ -9,6 +9,7 @@ interface NextImageOptimizedProps extends ImageProps {
   aspectRatio?: number; // Maintain aspect ratio (e.g., 16/9)
   className?: string; // Additional CSS classes
   style?: React.CSSProperties; // Inline styles
+  debug?: boolean; // Debugging mode
 }
 
 const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
@@ -17,28 +18,35 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
   aspectRatio,
   className,
   style,
+  debug = false,
   ...props
 }) => {
-  const deviceSize = getDeviceSize(); // Determine device size (desktop, tablet, mobile)
+  const deviceSize = getDeviceSize() || "desktop"; // Default to 'desktop'
+  const validAspectRatio = aspectRatio && aspectRatio > 0 ? aspectRatio : undefined;
 
   // Determine width and height
   let width = props?.width || deviceSizes[deviceSize];
-  let height = props?.height || (aspectRatio ? (width as number) / aspectRatio : undefined);
+  let height =
+    props?.height ||
+    (validAspectRatio ? (width as number) / validAspectRatio : undefined);
 
   // Check for percentage-based dimensions
   const isPercentageWidth = typeof width === "string" && width.includes("%");
   const isPercentageHeight = typeof height === "string" && height.includes("%");
 
-   const optimizedSrc = optimizeImage(
+  const optimizedSrc = optimizeImage(
     props?.src as string,
     quality,
-    isPercentageWidth ? undefined : width, // Pass width if it's not a percentage
-    isPercentageHeight ? undefined : height, // Pass height if it's not a percentage
-    aspectRatio // Optional aspect ratio
+    isPercentageWidth ? undefined : width,
+    isPercentageHeight ? undefined : height,
+    validAspectRatio
   );
 
+  if (process.env.NODE_ENV !== "production" && debug) {
+    console.log({ optimizedSrc, deviceSize, width, height, validAspectRatio });
+  }
 
-   return (
+  return (
     <div
       className={className}
       style={{
@@ -46,17 +54,17 @@ const NextImageOptimized: React.FC<NextImageOptimizedProps> = ({
         width: isPercentageWidth ? width : `${width}px`,
         height: isPercentageHeight
           ? height
-          : aspectRatio
-          ? `${(Number(width) / aspectRatio).toFixed(2)}px`
+          : validAspectRatio
+          ? `${(Number(width) / validAspectRatio).toFixed(2)}px`
           : `${height}px`,
-        ...style, // User-provided styles
+        ...style,
       }}
     >
       <Image
         {...props}
         src={optimizedSrc}
-        layout={isPercentageWidth || isPercentageHeight ? "fill" : "intrinsic"} // Handle percentage layout
-        objectFit="cover" // Keep aspect ratio
+        layout={isPercentageWidth || isPercentageHeight ? "fill" : "intrinsic"}
+        objectFit="cover"
         quality={quality}
       />
     </div>
